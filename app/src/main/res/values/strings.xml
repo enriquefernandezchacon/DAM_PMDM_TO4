@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">PMDM_TO4</string>
+
+    <string name="main_titulo">TAREA ONLINE 4</string>
+    <string name="main_subtitulo">Enrique O. Fdez. Chacón</string>
+    <string name="main_boton1">FIRMA</string>
+    <string name="main_boton2">TRADUCTOR</string>
+
+    <string name="menu_firma_configuracion">Configuración</string>
+
+    <string name="actionbar_firma">Firma</string>
+    <string name="actionbar_traductor">Traductor por voz</string>
+    
+    <string name="firma_boton_borrar">Borrar</string>
+    <string name="firma_boton_guardar">Guardar Firma</string>
+    <string name="firma_configuracion_titulo">Configuración de la firma</string>
+    <string name="firma_configuracion_tamano">Tamaño del trazo</string>
 </resources>
