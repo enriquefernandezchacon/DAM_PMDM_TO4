@@ -106,9 +106,9 @@ public class Pizzara extends View {
     }
 
     // Método que se encarga de descargar la firma.
-    private void janto() {
+    /*private void janto() {
         // Comprobamos si la firma está vacía
-        if (this.isEmpty()) {
+        /*if (this.isEmpty()) {
             Toast.makeText(getApplicationContext(), R.string.firmaVacia, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -141,5 +141,5 @@ public class Pizzara extends View {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }
