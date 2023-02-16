@@ -12,7 +12,8 @@
     <string name="actionbar_traductor">Traductor por voz</string>
     
     <string name="firma_boton_borrar">Borrar</string>
-    <string name="firma_boton_guardar">Guardar Firma</string>
+    <string name="firma_boton_guardar_interna">Guardar Firma Interna</string>
+    <string name="firma_boton_guardar_externa">Guardar Firma Externa</string>
     <string name="firma_configuracion_titulo">Configuración de la firma</string>
     <string name="firma_configuracion_tamano">Tamaño del trazo</string>
 </resources>

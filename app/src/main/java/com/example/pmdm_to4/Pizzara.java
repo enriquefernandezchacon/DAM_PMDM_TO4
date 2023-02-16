@@ -6,15 +6,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -43,7 +48,27 @@ public class Pizzara extends View {
         paint.setColor(Color.BLACK);
         paint.setStrokeWidth(5f);
         paint.setStyle(Paint.Style.STROKE);
+
+        confSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                paint.setStrokeWidth(progress);
+                invalidate();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -92,65 +117,49 @@ public class Pizzara extends View {
         invalidate();
     }
 
-    public String guardarFirma() {
+    public void guardarFirma(boolean interna) {
+        File file = null;
+        if (!interna) {
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                file = new File(Environment.getExternalStorageDirectory(), getNombreArchivo());
+            } else {
+                Toast.makeText(context, "No se encuentra una memoria externa", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            file = new File(getContext().getExternalFilesDir(null), getNombreArchivo());
+        }
+
+        if (file != null) {
+
+            try {
+                if(!file.exists()){ // Si no existe, crea el archivo.
+                    file.createNewFile();
+                }
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(getData());
+                fos.close();
+                Toast.makeText(context, "Firma guardada en la memoria " + (interna ? "interna" : "externa") + " del teléfono", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(context, "No se ha podido guardar la firma", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getNombreArchivo() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
+        String currentDateAndTime = sdf.format(new Date());
+        return "firma_" + currentDateAndTime + ".jpg";
+    }
+
+    private byte[] getData() {
         this.setDrawingCacheEnabled(true);
         this.buildDrawingCache(true);
         Bitmap bitmap = Bitmap.createBitmap(this.getDrawingCache());
 
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
-        String currentDateAndTime = sdf.format(new Date());
-        String fileName = "firma_" + currentDateAndTime + ".jpg";
-        String baseUrl = String.valueOf(context.getFilesDir());
-        return fileName;
-        /*try {
-            File file = new File(baseUrl + "/" + fileName);
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(data);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        return baos.toByteArray();
     }
-
-    // Método que se encarga de descargar la firma.
-    /*private void janto() {
-        // Comprobamos si la firma está vacía
-        /*if (this.isEmpty()) {
-            Toast.makeText(getApplicationContext(), R.string.firmaVacia, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // Permitimos que la vista se guarde en caché
-        this.setDrawingCacheEnabled(true);
-        // Obtenemos la imagen de la vista
-        Bitmap signatureBitmap = this.getDrawingCache();
-        // Creamos un objeto SimpleDateFormat con un formato de fecha específico y una localización local.
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
-        // Formateamosla fecha actual en una cadena con el formato especificado.
-        String currentDateAndTime = sdf.format(new Date());
-        // Creamos el nombre del archivo con la fecha y hora actual
-        String fileName = "firma_" + currentDateAndTime + ".jpg";
-        // Verificamos si la memoria externa está disponible para escribir
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            // Obtenemos la ruta de la memoria externa
-            File externalStorageDirectory = context.getExternalFilesDir(null);
-            // Creamos un objeto File con la ruta y el nombre del archivo
-            File signatureFile = new File(externalStorageDirectory, fileName);
-            try {
-                // Creamos un objeto FileOutputStream para escribir la imagen de la firma en el archivo.
-                FileOutputStream fos = new FileOutputStream(signatureFile);
-                // Comprimimos la imagen de la firma en el archivo
-                signatureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                // Cerramos el objeto FileOutputStream.
-                fos.close();
-                // Mostramos un mensaje con la ruta del archivo
-                Toast.makeText(context.getApplicationContext(), context.getString(R.string.firmaGuardada) + signatureFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }

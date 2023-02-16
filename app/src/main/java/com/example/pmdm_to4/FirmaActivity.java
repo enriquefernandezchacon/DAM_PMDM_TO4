@@ -3,8 +3,11 @@ package com.example.pmdm_to4;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,8 +18,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FirmaActivity extends AppCompatActivity {
+
+    private static final int WRITE_EXTERNAL_STORAGE = 1;
+    private static final int READ_EXTERNAL_STORAGE = 2;
 
     Pizzara pizarra;
 
@@ -70,8 +77,15 @@ public class FirmaActivity extends AppCompatActivity {
         findViewById(R.id.btBorrarFirma).setOnClickListener(v -> {
             pizarra.limpiar();
         });
-        findViewById(R.id.btGuardarFirma).setOnClickListener(v -> {
-            createFile(pizarra.guardarFirma());
+        findViewById(R.id.btGuardarFirmaInterna).setOnClickListener(v -> {
+            pizarra.guardarFirma(true);
+        });
+        findViewById(R.id.btGuardarFirmaExterna).setOnClickListener(v -> {
+            if (getPermisos()) {
+                pizarra.guardarFirma(false);
+            } else {
+                Toast.makeText(this, "No tiene permisos para acceder al almacenamiento externo", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -89,12 +103,14 @@ public class FirmaActivity extends AppCompatActivity {
         confSeekBar.setVisibility(View.VISIBLE);
     }
 
-    private void createFile(String nombre) {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/jpeg");
-        intent.putExtra(Intent.EXTRA_TITLE, nombre);
-
-        startActivity(intent);
+    public boolean getPermisos() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, READ_EXTERNAL_STORAGE);
+        }
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 }

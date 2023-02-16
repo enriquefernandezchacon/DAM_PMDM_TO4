@@ -84,25 +84,36 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btGuardarFirma"
+        android:id="@+id/btGuardarFirmaInterna"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/firma_boton_guardar"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="@string/firma_boton_guardar_interna"
+        app:layout_constraintBottom_toBottomOf="@+id/btBorrarFirma"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutFirma"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btGuardarFirmaExterna"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/firma_boton_guardar_externa"
+        app:layout_constraintBottom_toTopOf="@+id/btBorrarFirma"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btGuardarFirmaInterna" />
 
     <Button
         android:id="@+id/btBorrarFirma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="@string/firma_boton_borrar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btGuardarFirma"
-        app:layout_constraintVertical_bias="0.24000001" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
