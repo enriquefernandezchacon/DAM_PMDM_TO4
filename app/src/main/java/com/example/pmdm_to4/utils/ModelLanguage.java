@@ -1,4 +1,4 @@
-package com.example.pmdm_to4;
+package com.example.pmdm_to4.utils;
 
 public class ModelLanguage {
 

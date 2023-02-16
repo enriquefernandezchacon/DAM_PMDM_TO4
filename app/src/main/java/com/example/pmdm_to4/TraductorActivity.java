@@ -3,13 +3,18 @@ package com.example.pmdm_to4;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.Menu;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pmdm_to4.utils.ModelLanguage;
+import com.example.pmdm_to4.utils.TTSManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.mlkit.common.model.DownloadConditions;
 import com.google.mlkit.nl.translate.TranslateLanguage;
@@ -23,14 +28,20 @@ import java.util.Locale;
 
 public class TraductorActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
+
     private EditText sourceLanguageEt;
     private TextView targetLanguageTv;
     private MaterialButton sourceLanguageChooseBtn;
     private MaterialButton destinationLanguageChooseBtn;
     private MaterialButton translateBtn;
+    private MaterialButton microBtn;
+    private MaterialButton playBtn;
+    private Switch autoSwitch;
 
     private TranslatorOptions translatorOptions;
     private Translator translator;
+    private TTSManager ttsm;
 
     private ProgressDialog progressDialog;
     private ArrayList<ModelLanguage> languageArrayList;
@@ -52,10 +63,16 @@ public class TraductorActivity extends AppCompatActivity {
         sourceLanguageChooseBtn = findViewById(R.id.sourceLanguageChooseButton);
         destinationLanguageChooseBtn = findViewById(R.id.destinationLanguageChooseButton);
         translateBtn = findViewById(R.id.translateButton);
+        microBtn = findViewById(R.id.btGrabar);
+        playBtn = findViewById(R.id.playButton);
+        autoSwitch = findViewById(R.id.switchAutomatico);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCancelable(false);
+
+        ttsm = new TTSManager();
+        ttsm.init(this);
 
         loadAvailableLanguages();
 
@@ -70,6 +87,44 @@ public class TraductorActivity extends AppCompatActivity {
         translateBtn.setOnClickListener(v -> {
             valideData();
         });
+        microBtn.setOnClickListener(v -> {
+            entradaVoz();
+        });
+        playBtn.setOnClickListener(v -> {
+            ttsm.initQueue(targetLanguageTv.getText().toString());
+        });
+    }
+
+    private void entradaVoz() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hable ahora");
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        } catch (Exception e) {
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ttsm.shutDown();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    sourceLanguageEt.setText(result.get(0));
+                }
+                break;
+            }
+        }
     }
 
     private String sourceLanguageText = "";
@@ -105,6 +160,9 @@ public class TraductorActivity extends AppCompatActivity {
                             .addOnSuccessListener(translatedText -> {
                                 targetLanguageTv.setText(translatedText);
                                 progressDialog.dismiss();
+                                if (autoSwitch.isChecked()) {
+                                    ttsm.initQueue(targetLanguageTv.getText().toString());
+                                }
                             })
                             .addOnFailureListener(e -> {
                                 progressDialog.dismiss();
@@ -166,7 +224,5 @@ public class TraductorActivity extends AppCompatActivity {
             String languageTitle = new Locale(languageCode).getDisplayLanguage();
             languageArrayList.add(new ModelLanguage(languageCode, languageTitle));
         }
-
-
     }
 }

@@ -1,4 +1,4 @@
-package com.example.pmdm_to4;
+package com.example.pmdm_to4.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
