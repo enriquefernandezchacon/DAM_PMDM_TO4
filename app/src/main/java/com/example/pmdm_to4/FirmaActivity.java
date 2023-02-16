@@ -13,10 +13,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class FirmaActivity extends AppCompatActivity {
 
     Pizzara pizarra;
+
+    private LinearLayout layoutConfAlarma;
+    private TextView tvConfTitulo;
+    private TextView tvConfSubTitulo;
+    private SeekBar confSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +32,12 @@ public class FirmaActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(R.string.actionbar_firma);
 
-        pizarra = new Pizzara(this);
+        layoutConfAlarma = findViewById(R.id.layoutConfAlarma);
+        tvConfTitulo = findViewById(R.id.tvConfTitulo);
+        tvConfSubTitulo = findViewById(R.id.tvConfSubTitulo);
+        confSeekBar = findViewById(R.id.confSeekBar);
+
+        pizarra = new Pizzara(this, layoutConfAlarma, tvConfTitulo, tvConfSubTitulo, confSeekBar);
         pizarra.setBackgroundColor(Color.WHITE);
 
         LinearLayout linearLayout = findViewById(R.id.layoutFirma);
@@ -64,17 +76,17 @@ public class FirmaActivity extends AppCompatActivity {
     }
 
     private void ocultarConfiguracion() {
-        findViewById(R.id.layoutConfAlarma).setVisibility(ConstraintLayout.GONE);
-        findViewById(R.id.tvConfTitulo).setVisibility(View.GONE);
-        findViewById(R.id.tvConfSubTitulo).setVisibility(View.GONE);
-        findViewById(R.id.confSeekBar).setVisibility(View.GONE);
+        layoutConfAlarma.setVisibility(ConstraintLayout.GONE);
+        tvConfTitulo.setVisibility(View.GONE);
+        tvConfSubTitulo.setVisibility(View.GONE);
+        confSeekBar.setVisibility(View.GONE);
     }
 
     private void mostrarConfiguracion() {
-        findViewById(R.id.layoutConfAlarma).setVisibility(ConstraintLayout.VISIBLE);
-        findViewById(R.id.tvConfTitulo).setVisibility(View.VISIBLE);
-        findViewById(R.id.tvConfSubTitulo).setVisibility(View.VISIBLE);
-        findViewById(R.id.confSeekBar).setVisibility(View.VISIBLE);
+        layoutConfAlarma.setVisibility(ConstraintLayout.VISIBLE);
+        tvConfTitulo.setVisibility(View.VISIBLE);
+        tvConfSubTitulo.setVisibility(View.VISIBLE);
+        confSeekBar.setVisibility(View.VISIBLE);
     }
 
     private void createFile(String nombre) {

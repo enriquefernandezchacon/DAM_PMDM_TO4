@@ -1,26 +1,20 @@
 package com.example.pmdm_to4;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -31,9 +25,18 @@ public class Pizzara extends View {
     private Path path = new Path();
     private Context context;
 
-    public Pizzara(Context context) {
+    private LinearLayout layoutConfAlarma;
+    private TextView tvConfTitulo;
+    private TextView tvConfSubTitulo;
+    private SeekBar confSeekBar;
+
+    public Pizzara(Context context, LinearLayout layoutConfAlarma, TextView tvConfTitulo, TextView tvConfSubTitulo, SeekBar confSeekBar) {
         super(context);
         this.context = context;
+        this.layoutConfAlarma = layoutConfAlarma;
+        this.tvConfTitulo = tvConfTitulo;
+        this.tvConfSubTitulo = tvConfSubTitulo;
+        this.confSeekBar = confSeekBar;
 
         paint.setAntiAlias(true);
         paint.setStrokeJoin(Paint.Join.ROUND);
@@ -54,6 +57,14 @@ public class Pizzara extends View {
         float x = event.getX();
         float y = event.getY();
 
+        if(layoutConfAlarma.getVisibility() == View.VISIBLE) {
+            if (y > 250) {
+                ocultarConfiguracion();
+            } else {
+                return false;
+            }
+        }
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
@@ -67,6 +78,13 @@ public class Pizzara extends View {
 
         invalidate();
         return true;
+    }
+
+    private void ocultarConfiguracion() {
+        layoutConfAlarma.setVisibility(ConstraintLayout.GONE);
+        tvConfTitulo.setVisibility(TextView.GONE);
+        tvConfSubTitulo.setVisibility(TextView.GONE);
+        confSeekBar.setVisibility(SeekBar.GONE);
     }
 
     public void limpiar() {
@@ -96,13 +114,6 @@ public class Pizzara extends View {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-    }
-
-    private void ocultarConfiguracion() {
-        findViewById(R.id.layoutConfAlarma).setVisibility(ConstraintLayout.GONE);
-        findViewById(R.id.tvConfTitulo).setVisibility(View.GONE);
-        findViewById(R.id.tvConfSubTitulo).setVisibility(View.GONE);
-        findViewById(R.id.confSeekBar).setVisibility(View.GONE);
     }
 
     // Método que se encarga de descargar la firma.
