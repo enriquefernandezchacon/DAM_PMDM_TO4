@@ -46,10 +46,10 @@ public class TraductorActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ArrayList<ModelLanguage> languageArrayList;
 
-    private String sourceLanguageCode = "en";
-    private String sourceLanguageTitle = "English";
-    private String destinationLanguageCode = "ur";
-    private String destinationLanguageTitle = "Urdu";
+    private String sourceLanguageCode = "es";
+    private String sourceLanguageTitle = "Español";
+    private String destinationLanguageCode = "en";
+    private String destinationLanguageTitle = "English";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,9 @@ public class TraductorActivity extends AppCompatActivity {
         microBtn = findViewById(R.id.btGrabar);
         playBtn = findViewById(R.id.playButton);
         autoSwitch = findViewById(R.id.switchAutomatico);
+
+        sourceLanguageChooseBtn.setText(sourceLanguageTitle);
+        destinationLanguageChooseBtn.setText(destinationLanguageTitle);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
@@ -97,8 +100,8 @@ public class TraductorActivity extends AppCompatActivity {
 
     private void entradaVoz() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, sourceLanguageCode);
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, new Locale(sourceLanguageCode));
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hable ahora");
         try {
             startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
@@ -121,6 +124,9 @@ public class TraductorActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     sourceLanguageEt.setText(result.get(0));
+                    if (autoSwitch.isChecked()) {
+                        valideData();
+                    }
                 }
                 break;
             }
@@ -128,6 +134,7 @@ public class TraductorActivity extends AppCompatActivity {
     }
 
     private String sourceLanguageText = "";
+
     private void valideData() {
         sourceLanguageText = sourceLanguageEt.getText().toString().trim();
 
@@ -209,6 +216,7 @@ public class TraductorActivity extends AppCompatActivity {
             int position = item.getItemId();
             destinationLanguageCode = languageArrayList.get(position).getLanguageCode();
             destinationLanguageTitle = languageArrayList.get(position).getLanguageTitle();
+            ttsm.language = destinationLanguageCode;
 
             destinationLanguageChooseBtn.setText(destinationLanguageTitle);
             targetLanguageTv.setHint("Translated " + destinationLanguageTitle + " text");

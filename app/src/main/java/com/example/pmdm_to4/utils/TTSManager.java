@@ -11,6 +11,8 @@ public class TTSManager {
     private TextToSpeech mTts = null;
     private boolean isLoaded = false;
     private Context context;
+    public String language = "es";
+
 
     public void init(Context context) {
         this.context = context;
@@ -24,7 +26,7 @@ public class TTSManager {
     private TextToSpeech.OnInitListener onInitListener = new TextToSpeech.OnInitListener() {
         @Override
         public void onInit(int status) {
-            Locale spanish = new Locale("es", "ES");
+            Locale spanish = new Locale(language);
             if (status == TextToSpeech.SUCCESS) {
                 int result = mTts.setLanguage(spanish);
                 isLoaded = true;
