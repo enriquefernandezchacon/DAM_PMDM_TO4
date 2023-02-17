@@ -25,16 +25,16 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/sourceLanguageET"
+                android:id="@+id/etTextoATraducir"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:hint="Enter text to translate"
+                android:hint="@string/traductor_hint_texto_a_traducir"
                 android:minHeight="100dp"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/destinationLanguageTV"
+                android:id="@+id/tvTextoTraducido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -43,14 +43,13 @@
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/sourceLanguageChooseButton"
+        android:id="@+id/btIdiomaInicio"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:gravity="center"
-        android:text="English"
         app:cornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/translateButton"
+        app:layout_constraintBottom_toTopOf="@+id/btTraducir"
         app:layout_constraintEnd_toStartOf="@+id/imageButton" />
 
     <ImageButton
@@ -61,41 +60,40 @@
         android:background="@android:color/transparent"
         android:padding="10dp"
         android:src="@drawable/ic_baseline_arrow_forward_24"
-        app:layout_constraintBottom_toTopOf="@+id/translateButton"
+        app:layout_constraintBottom_toTopOf="@+id/btTraducir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/destinationLanguageChooseButton"
+        android:id="@+id/btIdiomaTraducido"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="Urdu"
-        app:layout_constraintBottom_toTopOf="@+id/translateButton"
+        app:layout_constraintBottom_toTopOf="@+id/btTraducir"
         app:layout_constraintStart_toEndOf="@+id/imageButton" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/translateButton"
+        android:id="@+id/btTraducir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
-        android:text="Translate"
+        android:text="@string/traductor_boton_traducir"
         app:icon="@drawable/ic_baseline_translate_24"
-        app:layout_constraintBottom_toTopOf="@+id/playButton"
+        app:layout_constraintBottom_toTopOf="@+id/btReproducir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/playButton"
+        android:id="@+id/btReproducir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:text="Reproducir"
+        android:text="@string/traductor_boton_reproducir"
         app:icon="@drawable/ic_baseline_translate_24"
         app:layout_constraintBottom_toTopOf="@+id/switchAutomatico"
         app:layout_constraintEnd_toEndOf="parent"

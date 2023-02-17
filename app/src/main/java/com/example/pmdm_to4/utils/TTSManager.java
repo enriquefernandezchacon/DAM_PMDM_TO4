@@ -8,60 +8,66 @@ import java.util.Locale;
 
 public class TTSManager {
 
-    private TextToSpeech mTts = null;
+    private TextToSpeech tts = null;
     private boolean isLoaded = false;
     private Context context;
     public String language = "es";
 
-
+    //Al inicializar la clase, asignamos un contexto y creamos un objeto TextToSpeech
     public void init(Context context) {
         this.context = context;
         try {
-            mTts = new TextToSpeech(context, onInitListener);
+            tts = new TextToSpeech(context, onInitListener);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private TextToSpeech.OnInitListener onInitListener = new TextToSpeech.OnInitListener() {
+    //Al inicializar el objeto TextToSpeech, se ejecuta este método
+    private final TextToSpeech.OnInitListener onInitListener = new TextToSpeech.OnInitListener() {
         @Override
         public void onInit(int status) {
-            Locale spanish = new Locale(language);
+            //Se asigna el idioma que se ha seleccionado como base
+            Locale locale = new Locale(language);
+            //Si se ha podido cargar el servicio de reproducción de voz
             if (status == TextToSpeech.SUCCESS) {
-                int result = mTts.setLanguage(spanish);
+                //Se asigna el idioma
+                int result = tts.setLanguage(locale);
+                //Se establece el flag a true
                 isLoaded = true;
-
+                //Si no se ha podido cargar el idioma
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    //Se establece el flag a false
                     isLoaded = false;
+                    //Se muestra un mensaje de error
                     Toast.makeText(context, "No se ha podido cargar los datos necesarios para el servicio de reproducción de voz", Toast.LENGTH_SHORT).show();
                 }
+            //Si no se ha podido cargar el servicio de reproducción de voz
             } else {
+                //Se muestra un mensaje de error
                 Toast.makeText(context, "No se ha podido cargar el servicio de reproducción de voz", Toast.LENGTH_SHORT).show();
             }
         }
     };
 
+    //Metodo para cerrar el servicio de reproducción de voz
     public void shutDown() {
-        if (mTts != null) {
-            mTts.stop();
-            mTts.shutdown();
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
         }
     }
 
-    public void addQueue(String text) {
+    //Metodo para reproducir un texto
+    public void reproducir(String text) {
+        //Si el servicio de reproducción de voz está disponible
         if (isLoaded) {
-            mTts.speak(text, TextToSpeech.QUEUE_ADD, null);
+            //Se reproduce el texto
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        //Si no está disponible
         } else {
+            //Se muestra un mensaje de error
             Toast.makeText(context, "El servicio de reproducción de voz no está disponible", Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void initQueue(String text) {
-        if (isLoaded) {
-            mTts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-        } else {
-            Toast.makeText(context, "El servicio de reproducción de voz no está disponible", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 }

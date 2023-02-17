@@ -2,9 +2,11 @@ package com.example.pmdm_to4.utils;
 
 public class ModelLanguage {
 
-    String languageCode;
-    String languageTitle;
+    private final String languageCode;
+    private final String languageTitle;
 
+
+    //En este objeto se guarda un idioma, tanto su código como su título
     public ModelLanguage(String languageCode, String languageTitle) {
         this.languageCode = languageCode;
         this.languageTitle = languageTitle;
@@ -14,15 +16,7 @@ public class ModelLanguage {
         return languageCode;
     }
 
-    public void setLanguageCode(String languageCode) {
-        this.languageCode = languageCode;
-    }
-
     public String getLanguageTitle() {
         return languageTitle;
-    }
-
-    public void setLanguageTitle(String languageTitle) {
-        this.languageTitle = languageTitle;
     }
 }

@@ -16,4 +16,8 @@
     <string name="firma_boton_guardar_externa">Guardar Firma Externa</string>
     <string name="firma_configuracion_titulo">Configuración de la firma</string>
     <string name="firma_configuracion_tamano">Tamaño del trazo</string>
+
+    <string name="traductor_hint_texto_a_traducir">Texto a traducir</string>
+    <string name="traductor_boton_traducir">Traducir</string>
+    <string name="traductor_boton_reproducir">Reproducir</string>
 </resources>
